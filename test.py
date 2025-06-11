@@ -9,12 +9,17 @@ time.sleep(0.5)
 
 cam = cv2.VideoCapture(0)
 
-value_on = [0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]
+value_on = [0x7F, 0x00, 100, 0x00, 0x00, 0x00, 0x00]
+value_on2 = [0x7F, 0x00, 60, 0x00, 0x00, 0x00, 0x00]
 
 value_off = [0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
 
-lower = np.uint8([0, 0, 0])
-upper = np.uint8([255, 255, 70])
+status = False
+
+stage = 1
+
+lower = np.uint8([0, 10, 135])
+upper = np.uint8([60, 255, 255])
 
 while True:
 
@@ -49,12 +54,23 @@ while True:
             cv2.circle(img, extRight, 8, (0,255,0), -1)
             cv2.circle(img, extTop, 8, (255,0,), -1)
             cv2.circle(img, extBot, 8, (255,255,0), -1)
+    
+    if stage == 1:  
 
-            if cx < 65 or cx > 85:
+        if cx > 65 and cx < 85:
+            if status == False:
                 ser.write(serial.to_bytes(value_on))
+                time.sleep(0.01)
+                print("on")
+                status = True
 
-            else:
-                ser.write(serial.to_bytes(value_off))
+            print("on2")
+            ser.write(serial.to_bytes(value_on2))
+
+        else:
+            ser.write(serial.to_bytes(value_off))
+            print("off")
+            status = False
 
 
     cv2.imshow("img", img)
