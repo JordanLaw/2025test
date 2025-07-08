@@ -9,6 +9,9 @@ time.sleep(0.5)
 
 cam = cv2.VideoCapture(0)
 
+'''
+Change the value if your robot is too fast or slow
+'''
 value_on = [0x7F, 0x00, 0x64, 0x00, 0x00, 0x02]
 value_on2 = [0x7F, 0x00, 0x50, 0x00, 0x00, 0x02]
 
@@ -46,6 +49,9 @@ cx = 0
 cy = 0
 Area = 0
 
+'''
+find the HSV value for other color by yourself
+'''
 y_lower = np.uint8([20, 140, 110])
 y_upper = np.uint8([70, 255, 255])
 
@@ -100,9 +106,6 @@ while True:
     if stage == 1: 
         img = img[400:480, 150:500]
 
-        '''
-        
-        '''
         detect_line(y_lower, y_upper) 
         
         if count >= 5:
