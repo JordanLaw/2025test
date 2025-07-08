@@ -162,10 +162,81 @@ while True:
             ser.write(serial.to_bytes(value_off))
             count += 1
 
+    elif stage == 2:
+        if direction != 6:
+            ser.write(serial.to_bytes(value_on))
+            time.sleep(0.01)
+            print("on")
+            direction = 6
+        
+        time_start = time.perf_counter()
+                
+        while time.perf_counter() - time_start < 0.5:
+            _, img = cam.read()
+            ser.write(serial.to_bytes(value_rotate_right))
+            
+        ser.write(serial.to_bytes(value_off))
+        print("off")
+        direction = 0
+            
+        stage = 3
+        
+    elif stage == 3:
+        img = img[400:480, 150:500]
+
+        detect_line(y_lower, y_upper) 
+        
+        if count > 5:
+            if cx >= 160 and cx <= 200:
+                if direction != 1:
+                    ser.write(serial.to_bytes(value_on))
+                    time.sleep(0.01)
+                    direction = 1
+
+                print("on2")
+                ser.write(serial.to_bytes(value_on2))
+
+            elif cx > 200:
+                if direction != 4:
+                    ser.write(serial.to_bytes(value_on))
+                    time.sleep(0.01)
+                    direction = 4
+                    
+                print("left")
+                ser.write(serial.to_bytes(value_left))
+
+            elif cx < 160 and cx >0:
+                if direction != 3:
+                    ser.write(serial.to_bytes(value_on))
+                    time.sleep(0.01)
+                    print("on")
+                    direction = 3
+                print("right")
+                ser.write(serial.to_bytes(value_right))
+
+            else:
+                time_start = time.perf_counter()
+                
+                while time.perf_counter() - time_start < 0.1:
+                    _, img = cam.read()
+                    ser.write(serial.to_bytes(value_on2))
+                    
+                ser.write(serial.to_bytes(value_off))
+                print("off")
+                direction = 0
+                
+                count = 0
+                
+                stage = 4
+        else:
+            count += 1
+            ser.write(serial.to_bytes(value_off))
+
 '''
 Write your code to control your robot and command them in different stage
 '''
-    elif stage == 2:
+    elif stage == 4:
+        
        
                 
             
